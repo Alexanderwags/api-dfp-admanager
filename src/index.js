@@ -20,17 +20,26 @@ async function main(){
 
     try{
         const client = auth.fromJSON(keys);
-        console.log(client.scopes);
+        //console.log(client.scopes);
         client.scopes =  ['https://www.googleapis.com/auth/dfp'];
-        console.log(client.scopes);
+        //console.log(client.scopes);
     
         const res=await client.authorize();
-        console.log(res);
-        console.log(client.credentials.access_token);
+        //console.log(res);
+        //console.log(client.credentials.access_token);
         
         const dfp = new DFP({networkCode: '160436694', apiVersion: 'v202002'});
         const lineItemService = await dfp.getService('LineItemService', client.credentials.access_token);
-        console.log(lineItemService);
+       // console.log(lineItemService);
+
+
+        const resp = await lineItemService.getLineItemsByStatement({
+            filterStatement: {
+                query: "WHERE name LIKE 'prebid%'"
+            }
+        });
+         
+        console.log(resp.results[0].id);
     }
     catch(e){
         console.log(e);
